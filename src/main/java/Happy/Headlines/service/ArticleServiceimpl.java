@@ -1,8 +1,7 @@
-package service;
+package Happy.Headlines.service;
 
-import dao.ArticleRepository;
-import entities.Article;
-import org.springframework.context.annotation.Bean;
+import Happy.Headlines.dao.ArticleRepository;
+import Happy.Headlines.entities.Article;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

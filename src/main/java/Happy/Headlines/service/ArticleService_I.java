@@ -1,7 +1,6 @@
-package service;
+package Happy.Headlines.service;
 
-import entities.Article;
-import org.springframework.context.annotation.Bean;
+import Happy.Headlines.entities.Article;
 
 import java.util.List;
 

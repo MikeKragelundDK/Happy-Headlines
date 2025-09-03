@@ -1,4 +1,4 @@
-package entities;
+package Happy.Headlines.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
