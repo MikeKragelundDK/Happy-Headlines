@@ -1,0 +1,14 @@
+package service;
+
+import entities.Article;
+import org.springframework.context.annotation.Bean;
+
+import java.util.List;
+
+public interface ArticleService_I {
+    public Article getArticle(long id);
+    public List<Article> getArticles();
+    public Article addArticle(Article article);
+    public Article updateArticle(long id,Article article);
+    public  void deleteArticle(long id);
+}
