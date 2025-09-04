@@ -1,4 +1,4 @@
-package Happy.Headlines.entities;
+package ArticleService.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,12 +21,12 @@ public class Article {
     @Column(name="author")
     private String author;
     @Column(name="published_at")
-    private LocalDateTime published_at;
+    private LocalDateTime publishedAt;
 
     public Article(String title, String author, LocalDateTime published_at) {
         this.title = title;
         this.author = author;
-        this.published_at = published_at;
+        this.publishedAt = published_at;
     }
 
     protected Article() {
@@ -38,7 +38,7 @@ public class Article {
         return "article{" +
                 "title='" + title + '\'' +
                 ", author='" + author + '\'' +
-                ", published_at=" + published_at +
+                ", published_at=" + publishedAt +
                 '}';
     }
 }

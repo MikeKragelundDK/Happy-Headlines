@@ -1,7 +1,7 @@
-package Happy.Headlines.service;
+package ArticleService.service;
 
-import Happy.Headlines.dao.ArticleRepository;
-import Happy.Headlines.entities.Article;
+import ArticleService.dao.ArticleRepository;
+import ArticleService.entities.Article;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +29,8 @@ public class ArticleServiceimpl implements ArticleService_I {
     }
 
     @Override
-    public Article updateArticle(long id,Article article) {
-        return articleRepos.save(getArticle(id));
+    public Article updateArticle(Article article) {
+        return articleRepos.save(article);
     }
 
     @Override
