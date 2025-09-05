@@ -12,5 +12,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     Article getArticlesById(long id);
 
     // for init
-    boolean existsByTitleAndAuthorAndPublishedAt(String title, String author, LocalDateTime publishedAt);
+    boolean existsByTitleAndAuthor(String title, String author);
 }

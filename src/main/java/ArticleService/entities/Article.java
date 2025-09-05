@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name="id", unique = true)
     private long id;
     @Column(name="title")
     private String title;
@@ -27,6 +27,12 @@ public class Article {
         this.title = title;
         this.author = author;
         this.publishedAt = published_at;
+    }
+    public Article(long id,String title, String author, LocalDateTime published_at) {
+        this.title = title;
+        this.author = author;
+        this.publishedAt = published_at;
+        this.id = id;
     }
 
     protected Article() {

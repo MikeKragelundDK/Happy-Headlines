@@ -1,11 +1,10 @@
-version: "3.9"
-
 services:
   app:
     build:
       context: .
     image: articleserviceimage:dev
     environment:
+      SERVER_PORT: 8181
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqlarticleservice:3306/articleservice
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: happy123

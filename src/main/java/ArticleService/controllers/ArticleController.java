@@ -1,9 +1,12 @@
 package ArticleService.controllers;
 
 import ArticleService.entities.Article;
+import ArticleService.entities.ArticleRequest;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ArticleService.service.ArticleService_I;
-
 import java.util.List;
 
 @RestController
@@ -16,34 +19,42 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public Article getArticle(@PathVariable long id) {
-        return articleService.getArticle(id);
+    public ResponseEntity<Article> getArticle(@PathVariable long id) {
+        Article fetched = articleService.getArticle(id);
+        return ResponseEntity.status(HttpStatus.OK).body(fetched);
     }
+
     @GetMapping
-    public List<Article> getArticles() {
-        return articleService.getArticles();
+    public ResponseEntity<List<Article>> getArticles() {
+        List<Article> fetched = articleService.getArticles();
+        return ResponseEntity.status(HttpStatus.OK).body(fetched);
     }
-    @PostMapping("/")
-    public void saveArticle(@RequestBody Article article) {
-        articleService.addArticle(article);
+
+    @PostMapping
+    public ResponseEntity<Article> saveArticle(@RequestBody ArticleRequest article) {
+        Article a = new Article(article.getTitle(),article.getAuthor(),article.getPublishedAt());
+        Article saved = articleService.addArticle(a);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
+
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable long id) {
+    public ResponseEntity<Article> deleteArticle(@PathVariable long id) {
         Article article = articleService.getArticle(id);
         if(article == null) {
             throw new RuntimeException("Article not found: " + id);
         }
         articleService.deleteArticle(id);
 
-        return "Deleted article: " + id;
+        return ResponseEntity.status(HttpStatus.OK).body(article);
     }
 
-
     @PutMapping("/{id}")
-    public  Article updateArticle(@PathVariable long id, @RequestBody Article article) {
+    public  ResponseEntity<Article> updateArticle(@PathVariable long id, @RequestBody ArticleRequest article) {
         if(articleService.getArticle(id) == null) {
             throw new RuntimeException("Article not found: " + id);
         }
-        return articleService.updateArticle(article);
+        Article a = new Article(id,article.getTitle(),article.getAuthor(),article.getPublishedAt());
+        Article saved = articleService.updateArticle(a);
+        return  ResponseEntity.status(HttpStatus.OK).body(saved);
     }
 }

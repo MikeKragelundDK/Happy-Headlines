@@ -21,7 +21,7 @@ public class DataInitializer {
             );
 
             for(Article article : seed){
-                if(!repo.existsByTitleAndAuthorAndPublishedAt(article.getTitle(),article.getAuthor(),article.getPublishedAt())){
+                if(!repo.existsByTitleAndAuthor(article.getTitle(),article.getAuthor())){
                     repo.save(article);
                 }
             }
