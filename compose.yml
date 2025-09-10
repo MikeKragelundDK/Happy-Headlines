@@ -1,0 +1,58 @@
+services:
+  article-service:
+    build:
+      context: .
+      dockerfile: services/article-service/Dockerfile
+    image: happy-headlines/article-service:dev
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-article:3306/articleservice
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: happy123
+    depends_on:
+      mysql-article:
+        condition: service_healthy
+    expose:
+      - "8080"
+    networks:
+      - happy_headlines_network
+    deploy:
+      mode: replicated
+      replicas: 3
+
+  lb:
+    image: nginx:alpine
+    depends_on:
+      - article-service
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - happy_headlines_network
+
+  mysql-article:
+    image: mysql:latest
+    container_name: mysql-article
+    ports:
+      - "3310:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=happy123
+      - MYSQL_DATABASE=articleservice
+    healthcheck:
+      test: ["CMD","mysqladmin","ping", "-h","localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+    volumes:
+      - articleDbVolume:/var/lib/mysql
+    networks:
+      - happy_headlines_network
+
+networks:
+  happy_headlines_network: {}
+
+volumes:
+  articleDbVolume: {}
+
