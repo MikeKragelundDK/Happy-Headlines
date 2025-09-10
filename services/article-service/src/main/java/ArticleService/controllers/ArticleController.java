@@ -2,7 +2,6 @@ package ArticleService.controllers;
 
 import ArticleService.entities.Article;
 import ArticleService.entities.ArticleRequest;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +30,7 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<Article> saveArticle(@RequestBody ArticleRequest article) {
+    public ResponseEntity<Article> postArticle(@RequestBody ArticleRequest article) {
         Article a = new Article(article.getTitle(),article.getAuthor(),article.getPublishedAt());
         Article saved = articleService.addArticle(a);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);

@@ -21,7 +21,7 @@ services:
       mode: replicated
       replicas: 3
 
-  lb:
+  lb_article-service:
     image: nginx:alpine
     depends_on:
       - article-service
