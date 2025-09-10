@@ -11,15 +11,16 @@ public class ProfanityClient {
     private final RestClient http;
 
     public ProfanityClient(RestClient.Builder builder) {
-        this.http = builder.baseUrl("http://localhost:8282").build();
+        this.http = builder.baseUrl("http://profanity-service:8282")
+                .build();
     }
 
-    public ProfanityResponse filter(String content){
-        return http.post()
-                .uri("/api/profanity")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ProfanityRequest(content))
-                .retrieve()
-                .body(ProfanityResponse.class);
+    public Boolean filter(String content){
+        return Boolean.TRUE.equals(http.post()
+                                                  .uri("/api/profanity/check")
+                                                  .contentType(MediaType.TEXT_PLAIN)
+                                                  .body(content)
+                                                  .retrieve()
+                                                  .body(Boolean.class));
     }
 }

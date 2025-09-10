@@ -16,7 +16,7 @@
     <modules>
         <module>article-service</module>
         <module>CommentService</module>
-
+        <module>ProfanityService</module>
         <!-- HUSK FOR HELEVEDE AT SMID FLERE SERVICES HERI -->
     </modules>
 

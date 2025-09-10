@@ -5,10 +5,12 @@ import CommentService.dao.CommentRepository;
 import CommentService.dto.ProfanityResponse;
 import CommentService.entities.Comment;
 import CommentService.entities.Profanity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
+@Slf4j
 public class CommentServiceImpl implements CommentService_I {
     private final CommentRepository commentRepository;
     private final ProfanityClient profane;
@@ -21,17 +23,17 @@ public class CommentServiceImpl implements CommentService_I {
     @Override
     public Comment addComment(Comment comment) {
         // Implement circuit breaker here.
-        /*try{
-        ProfanityResponse profanityResponse = profane.filter(comment.getContent());
-        boolean isProfane = profanityResponse.isProfane();
+        try{
+        Boolean isProfane = profane.filter(comment.getContent());
         if(isProfane) {
             comment.setProfane(Profanity.PROFANE);
         } else {
             comment.setProfane(Profanity.SAFE);
         }}
         catch (Exception e) {
-            e.printStackTrace();
-        }*/
+            log.warn("Profanity service failed, marking as UNSURE", e);
+            comment.setProfane(Profanity.UNSURE);
+        }
 
         return commentRepository.save(comment);
     }

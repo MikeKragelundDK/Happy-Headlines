@@ -39,6 +39,8 @@ services:
     depends_on:
       mysql-comment:
         condition: service_healthy
+      profanity-service:
+        condition: service_healthy
     expose:
       - 8181
     networks:
@@ -47,11 +49,44 @@ services:
       mode: replicated
       replicas: 1
 
+  profanity-service:
+    build:
+      context: .
+      dockerfile: services/ProfanityService/Dockerfile
+    image: happy-headlines/profanity-service:dev
+    environment:
+      SPRING_SESSION_STORE_TYPE: jdbc
+      SPRING_SESSION_JDBC_INITIALIZE_SCHEMA: always
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8282
+      SERVER_ADDRESS: 0.0.0.0
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-profanity:3306/bannedWordsdatabase
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: happy123
+    depends_on:
+      mysql-profanity:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8282/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 40s
+    expose:
+      - 8282
+    networks:
+      - happy_headlines_network
+    deploy:
+      mode: replicated
+      replicas: 1
+
+
   nginxservice:
     image: nginx:alpine
     depends_on:
       - article-service
       - comment-service
+      - profanity-service
     ports:
       - "80:80"
     volumes:
@@ -95,10 +130,30 @@ services:
     networks:
       - happy_headlines_network
 
+  mysql-profanity:
+    image: mysql:latest
+    container_name: mysql-profanity
+    ports:
+      - "3312:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=happy123
+      - MYSQL_DATABASE=bannedWordsdatabase
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping", "-h","localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+    volumes:
+      - profanityDbVolume:/var/lib/mysql
+    networks:
+      - happy_headlines_network
+
+
 networks:
   happy_headlines_network: {}
 
 volumes:
   articleDbVolume: {}
   commentDbVolume: {}
+  profanityDbVolume: {}
 

@@ -3,16 +3,6 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for CommentService" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-        </processorPath>
-        <module name="CommentService" />
-      </profile>
       <profile name="Annotation profile for monorepo" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -21,6 +11,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="Happy-Headlines-ArticleService (1)" />
+        <module name="CommentService" />
+        <module name="ProfanityService" />
       </profile>
     </annotationProcessing>
   </component>
@@ -29,6 +21,7 @@
       <module name="CommentService" options="-parameters" />
       <module name="Happy-Headlines" options="" />
       <module name="Happy-Headlines-ArticleService (1)" options="-parameters" />
+      <module name="ProfanityService" options="-parameters" />
       <module name="services" options="" />
     </option>
   </component>
