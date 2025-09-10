@@ -5,6 +5,8 @@ services:
       dockerfile: services/article-service/Dockerfile
     image: happy-headlines/article-service:dev
     environment:
+      SPRING_SESSION_STORE_TYPE: jdbc
+      SPRING_SESSION_JDBC_INITIALIZE_SCHEMA: always
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8080
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-article:3306/articleservice
@@ -13,18 +15,43 @@ services:
     depends_on:
       mysql-article:
         condition: service_healthy
-    expose:
-      - "8080"
     networks:
       - happy_headlines_network
+    expose:
+      - 8080
     deploy:
       mode: replicated
       replicas: 3
 
-  lb_article-service:
+  comment-service:
+    build:
+      context: .
+      dockerfile: services/CommentService/Dockerfile
+    image: happy-headlines/comment-service:dev
+    environment:
+      SPRING_SESSION_STORE_TYPE: jdbc
+      SPRING_SESSION_JDBC_INITIALIZE_SCHEMA: always
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8181
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-comment:3306/commentdatabase
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: happy123
+    depends_on:
+      mysql-comment:
+        condition: service_healthy
+    expose:
+      - 8181
+    networks:
+      - happy_headlines_network
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  nginxservice:
     image: nginx:alpine
     depends_on:
       - article-service
+      - comment-service
     ports:
       - "80:80"
     volumes:
@@ -50,9 +77,28 @@ services:
     networks:
       - happy_headlines_network
 
+  mysql-comment:
+    image: mysql:latest
+    container_name: mysql-comment
+    ports:
+      - "3311:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=happy123
+      - MYSQL_DATABASE=commentdatabase
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping", "-h","localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+    volumes:
+      - commentDbVolume:/var/lib/mysql
+    networks:
+      - happy_headlines_network
+
 networks:
   happy_headlines_network: {}
 
 volumes:
   articleDbVolume: {}
+  commentDbVolume: {}
 

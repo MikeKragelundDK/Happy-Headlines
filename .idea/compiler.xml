@@ -27,7 +27,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="CommentService" options="-parameters" />
-      <module name="Happy-Headlines-ArticleService" options="" />
+      <module name="Happy-Headlines" options="" />
       <module name="Happy-Headlines-ArticleService (1)" options="-parameters" />
       <module name="services" options="" />
     </option>

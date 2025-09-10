@@ -21,7 +21,7 @@ public class CommentServiceImpl implements CommentService_I {
     @Override
     public Comment addComment(Comment comment) {
         // Implement circuit breaker here.
-        try{
+        /*try{
         ProfanityResponse profanityResponse = profane.filter(comment.getContent());
         boolean isProfane = profanityResponse.isProfane();
         if(isProfane) {
@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService_I {
         }}
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         return commentRepository.save(comment);
     }

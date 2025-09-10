@@ -13,7 +13,6 @@ public class DateOrDateTimeDeserializer extends JsonDeserializer<LocalDateTime> 
     public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String s = p.getText().trim();
         if (s.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            // date-only -> midnight
             return LocalDate.parse(s).atStartOfDay();
         }
         s = s.replace(' ', 'T');
