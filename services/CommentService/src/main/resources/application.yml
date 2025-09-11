@@ -1,0 +1,28 @@
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        permitted-number-of-calls-in-half-open-state: 10
+        max-wait-duration-in-half-open-state: 0
+        sliding-window-type: TIME_BASED
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state:
+          seconds: 10
+        automatic-transition-from-open-to-half-open-enabled: true
+        failure-rate-threshold: 50
+        event-consumer-buffer-size: 10
+        writable-stack-trace-enabled: false
+
+    instances:
+      profanityService:
+        base-config: default
+
+  retry:
+    instances:
+      profanityService:
+        max-attempts: 3
+        wait-duration:
+          seconds: 2
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2.0

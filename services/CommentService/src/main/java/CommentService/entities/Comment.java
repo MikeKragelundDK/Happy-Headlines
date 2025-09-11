@@ -4,12 +4,22 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "comments", schema = "commentdatabase")
+@Table(name = "comments", schema = "commentdatabase", indexes = {
+        @Index(
+                // indexing on the articleid, making lookups a bit faster for the site.
+                // tradeoff here, is that the scheduler is gonna have heavier calls.
+                // I could also index it on profanity status - making the scheduler faster
+                // However this would make the web site slower.
+                // I priotize response time (availablity over consistency).
+                name = "idx_comments_article_posted_id",
+                columnList ="articleid, posted_at, id")
+})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +36,18 @@ public class Comment {
     @Column(name="posted_at", nullable = false)
     private LocalDateTime postedAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name ="profane")
     private Profanity profane;
 
+    @Column(name="profanity_Attempts", nullable = false)
+    private int profanityAttempts =0;
+
+    @Column(name ="profanity_next_attempt")
+    private Instant profanityNextAttemptAt = null;
+
     protected Comment() {
+
     }
 
     public Comment(LocalDateTime postedAt, String content, long articleId) {
@@ -37,6 +55,8 @@ public class Comment {
         this.content = content;
         this.postedAt = postedAt;
         this.profane = Profanity.UNSURE;
+        this.profanityAttempts = 0;
+        this.profanityNextAttemptAt = null;
     }
 
     public Comment(long id, LocalDateTime postedAt, String content, long articleId) {
@@ -46,6 +66,8 @@ public class Comment {
         this.articleId = articleId;
         // Default is unsure
         this.profane = Profanity.UNSURE;
+        this.profanityAttempts = 0;
+        this.profanityNextAttemptAt =null;
     }
 
     @Override

@@ -5,9 +5,12 @@ import CommentService.dao.CommentRepository;
 import CommentService.dto.ProfanityResponse;
 import CommentService.entities.Comment;
 import CommentService.entities.Profanity;
+import CommentService.exceptions.ProfanityServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 @Service
 @Slf4j
@@ -30,9 +33,13 @@ public class CommentServiceImpl implements CommentService_I {
         } else {
             comment.setProfane(Profanity.SAFE);
         }}
-        catch (Exception e) {
-            log.warn("Profanity service failed, marking as UNSURE", e);
+        catch (ProfanityServiceUnavailableException e) {
+            log.warn("Profanity service failed, marking as UNSURE");
             comment.setProfane(Profanity.UNSURE);
+
+            // mark for retry and attempt again in 10 minutes.
+            comment.setProfanityAttempts(1);
+            comment.setProfanityNextAttemptAt(Instant.now().plus(Duration.ofMinutes(10)));
         }
 
         return commentRepository.save(comment);
@@ -54,8 +61,18 @@ public class CommentServiceImpl implements CommentService_I {
     }
 
     @Override
-    public void deleteCommentForArticle(long articleId) {
-        commentRepository.delete(commentRepository.findCommentByArticleId(articleId));
+    public void deleteCommentForArticle(long articleId, long id) {
+        commentRepository.delete(commentRepository.findCommentByArticleIdAndId(articleId, id));
 
+    }
+
+    @Override
+    public List<Comment> findTop200ByProfaneAndProfanityNextAttemptAtBeforeOrderByIdAsc(Profanity profane, Instant cutoff) {
+        return commentRepository.findTop200ByProfaneAndProfanityNextAttemptAtBeforeOrderByIdAsc(profane,cutoff);
+    }
+
+    @Override
+    public void saveAll(List<Comment> comments) {
+        commentRepository.saveAll(comments);
     }
 }
