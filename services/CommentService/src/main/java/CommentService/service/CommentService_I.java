@@ -4,6 +4,7 @@ import CommentService.entities.Comment;
 import CommentService.entities.Profanity;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 
 public interface CommentService_I {
@@ -19,4 +20,8 @@ public interface CommentService_I {
             Profanity profane, Instant cutoff);
 
     void saveAll(List<Comment> comments);
+
+    List<Long> findCommentIds();
+
+    long deleteAllByArticleId(Collection<Long> articleId);
 }

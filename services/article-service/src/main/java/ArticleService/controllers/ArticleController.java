@@ -1,12 +1,13 @@
 package ArticleService.controllers;
 
 import ArticleService.entities.Article;
-import ArticleService.entities.ArticleRequest;
+import ArticleService.dto.ArticleRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ArticleService.service.ArticleService_I;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/articles")
@@ -55,5 +56,11 @@ public class ArticleController {
         Article a = new Article(id,article.getTitle(),article.getAuthor(),article.getPublishedAt());
         Article saved = articleService.updateArticle(a);
         return  ResponseEntity.status(HttpStatus.OK).body(saved);
+    }
+
+    @PostMapping("/exists")
+    public ResponseEntity<Map<Long, Boolean>> exists(@RequestBody List<Long> ids) {
+        Map<Long, Boolean> result = articleService.existsMap(ids);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

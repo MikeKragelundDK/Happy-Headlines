@@ -4,7 +4,8 @@ import ArticleService.dao.ArticleRepository;
 import ArticleService.entities.Article;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+
 @Service
 public class ArticleServiceimpl implements ArticleService_I {
     private final ArticleRepository articleRepos;
@@ -36,5 +37,15 @@ public class ArticleServiceimpl implements ArticleService_I {
     @Override
     public void deleteArticle(long id) {
         articleRepos.delete(getArticle(id));
+    }
+
+    @Override
+    public Map<Long, Boolean> existsMap(List<Long> ids) {
+        List<Long> existingIds = articleRepos.findExistingIds(ids);
+        Map<Long, Boolean> result = new HashMap<>();
+        for(Long id : ids){
+           result.put(id, existingIds.contains(id));
+        }
+        return result;
     }
 }

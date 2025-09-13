@@ -31,4 +31,18 @@ public class CommentController {
         Comment saved = commentService.addComment(c);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
+    @GetMapping("/comment-ids")
+    public ResponseEntity<List<Long>> getCommentids(){
+        List<Long> fetched = commentService.findCommentIds();
+        return ResponseEntity.status(HttpStatus.OK).body(fetched);
+    }
+
+    // I wanna do deletemapping (delete request) - however spring doesn't support that.. So we do post.
+    @PostMapping("/bulk-delete")
+    public ResponseEntity<String> deleteCommentsById(@RequestBody List<Long> articleIds){
+
+        commentService.deleteAllByArticleId(articleIds);
+        return ResponseEntity.status(HttpStatus.OK).body(articleIds + "deleted");
+    }
+
 }

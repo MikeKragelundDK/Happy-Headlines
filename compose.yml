@@ -81,12 +81,24 @@ services:
       replicas: 1
 
 
+  comment-cleaner:
+    build:
+      context: .
+      dockerfile: services/CommentCleaner/Dockerfile
+    image: happy-headlines/comment-cleaner:dev
+    networks:
+      - happy_headlines_network
+    expose:
+      - 8383
+
+
   nginxservice:
     image: nginx:alpine
     depends_on:
       - article-service
       - comment-service
       - profanity-service
+      - comment-cleaner
     ports:
       - "80:80"
     volumes:

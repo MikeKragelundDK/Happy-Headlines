@@ -2,15 +2,16 @@ package CommentService.service;
 
 import CommentService.clients.ProfanityClient;
 import CommentService.dao.CommentRepository;
-import CommentService.dto.ProfanityResponse;
 import CommentService.entities.Comment;
 import CommentService.entities.Profanity;
 import CommentService.exceptions.ProfanityServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 @Service
 @Slf4j
@@ -24,6 +25,7 @@ public class CommentServiceImpl implements CommentService_I {
     }
 
     @Override
+    @Transactional
     public Comment addComment(Comment comment) {
         // Implement circuit breaker here.
         try{
@@ -74,5 +76,16 @@ public class CommentServiceImpl implements CommentService_I {
     @Override
     public void saveAll(List<Comment> comments) {
         commentRepository.saveAll(comments);
+    }
+
+    @Override
+    public List<Long> findCommentIds() {
+        return commentRepository.findCommentIds();
+    }
+
+    @Override
+    @Transactional
+    public long deleteAllByArticleId(Collection<Long> articleId) {
+        return commentRepository.deleteByArticleIdIn(articleId);
     }
 }
