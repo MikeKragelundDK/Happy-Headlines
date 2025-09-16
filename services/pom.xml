@@ -18,6 +18,7 @@
         <module>CommentService</module>
         <module>ProfanityService</module>
         <module>CommentCleaner</module>
+        <module>DraftService</module>
         <!-- HUSK FOR HELEVEDE AT SMID FLERE SERVICES HERI -->
     </modules>
 

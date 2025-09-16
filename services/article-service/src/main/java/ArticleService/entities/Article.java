@@ -22,17 +22,21 @@ public class Article {
     private String author;
     @Column(name="published_at")
     private LocalDateTime publishedAt;
+    @Column(name="content")
+    private String content;
 
-    public Article(String title, String author, LocalDateTime published_at) {
+    public Article(String title, String author, LocalDateTime published_at, String content) {
         this.title = title;
         this.author = author;
         this.publishedAt = published_at;
+        this.content = content;
     }
-    public Article(long id,String title, String author, LocalDateTime published_at) {
+    public Article(long id,String title, String author, LocalDateTime published_at, String content) {
         this.title = title;
         this.author = author;
         this.publishedAt = published_at;
         this.id = id;
+        this.content = content;
     }
 
     protected Article() {

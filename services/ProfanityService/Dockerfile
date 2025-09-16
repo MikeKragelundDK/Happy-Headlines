@@ -12,5 +12,9 @@ RUN mvn -q -B -f services/ProfanityService/pom.xml -DskipTests package
 FROM eclipse-temurin:21-jre
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
+COPY otel/opentelemetry-javaagent.jar /otel/opentelemetry-javaagent.jar
+
 COPY --from=build /workspace/services/ProfanityService/target/*.jar app.jar
+ENV JAVA_TOOL_OPTIONS="-javaagent:/otel/opentelemetry-javaagent.jar"
+
 ENTRYPOINT ["java","-jar","/app/app.jar"]

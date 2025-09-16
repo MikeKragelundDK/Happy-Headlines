@@ -10,6 +10,7 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
+        <module name="DraftService" />
         <module name="Happy-Headlines-ArticleService (1)" />
         <module name="CommentService" />
         <module name="ProfanityService" />
@@ -26,6 +27,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="CommentCleaner" options="-parameters" />
       <module name="CommentService" options="-parameters" />
+      <module name="DraftService" options="-parameters" />
       <module name="Happy-Headlines" options="" />
       <module name="Happy-Headlines-ArticleService (1)" options="-parameters" />
       <module name="ProfanityService" options="-parameters" />

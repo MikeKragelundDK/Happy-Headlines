@@ -32,7 +32,7 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<Article> postArticle(@RequestBody ArticleRequest article) {
-        Article a = new Article(article.getTitle(),article.getAuthor(),article.getPublishedAt());
+        Article a = new Article(article.getTitle(),article.getAuthor(),article.getPublishedAt(), article.getContent());
         Article saved = articleService.addArticle(a);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
@@ -53,7 +53,7 @@ public class ArticleController {
         if(articleService.getArticle(id) == null) {
             throw new RuntimeException("Article not found: " + id);
         }
-        Article a = new Article(id,article.getTitle(),article.getAuthor(),article.getPublishedAt());
+        Article a = new Article(id,article.getTitle(),article.getAuthor(),article.getPublishedAt(), article.getContent());
         Article saved = articleService.updateArticle(a);
         return  ResponseEntity.status(HttpStatus.OK).body(saved);
     }

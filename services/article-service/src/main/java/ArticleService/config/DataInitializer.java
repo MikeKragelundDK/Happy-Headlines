@@ -15,9 +15,9 @@ public class DataInitializer {
     ApplicationRunner init(ArticleRepository repo) {
         return args -> {
             List<Article> seed = List.of(
-                    new Article("Dummy data 1", "System", LocalDateTime.now()),
-                    new Article("Dummy data 2", "System", LocalDateTime.now()),
-                    new Article("Dummy data 3", "System", LocalDateTime.now())
+                    new Article("Dummy data 1", "System", LocalDateTime.now(), "test123"),
+                    new Article("Dummy data 2", "System", LocalDateTime.now(),"test123"),
+                    new Article("Dummy data 3", "System", LocalDateTime.now(),"test123")
             );
 
             for(Article article : seed){

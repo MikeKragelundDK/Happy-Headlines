@@ -15,4 +15,5 @@ public class ArticleRequest {
     private String author;
     @JsonDeserialize(using = DateOrDateTimeDeserializer.class)
     private LocalDateTime publishedAt;
+    private String content;
 }

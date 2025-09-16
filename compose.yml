@@ -12,6 +12,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-article:3306/articleservice
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: happy123
+      OTEL_SERVICE_NAME: service-article
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+      OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
     depends_on:
       mysql-article:
         condition: service_healthy
@@ -36,6 +40,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-comment:3306/commentdatabase
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: happy123
+      OTEL_SERVICE_NAME: service-comment
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+      OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
     depends_on:
       mysql-comment:
         condition: service_healthy
@@ -63,6 +71,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-profanity:3306/bannedWordsdatabase
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: happy123
+      OTEL_SERVICE_NAME: service-profanity
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+      OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
     depends_on:
       mysql-profanity:
         condition: service_healthy
@@ -86,11 +98,41 @@ services:
       context: .
       dockerfile: services/CommentCleaner/Dockerfile
     image: happy-headlines/comment-cleaner:dev
+    environment:
+      OTEL_SERVICE_NAME: service-cleanup_comments
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+      OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
+
     networks:
       - happy_headlines_network
     expose:
       - 8383
 
+  draft-service:
+    build:
+      context: .
+      dockerfile: services/DraftService/Dockerfile
+    image: happy-headlines/draft-service:dev
+    environment:
+      SPRING_SESSION_STORE_TYPE: jdbc
+      SPRING_SESSION_JDBC_INITIALIZE_SCHEMA: always
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8484
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-draft:3306/draftdatabase
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: happy123
+      OTEL_SERVICE_NAME: service-draft
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+      OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
+    networks:
+      - happy_headlines_network
+    expose:
+      - 8484
+    deploy:
+      mode: replicated
+      replicas: 2
 
   nginxservice:
     image: nginx:alpine
@@ -99,6 +141,7 @@ services:
       - comment-service
       - profanity-service
       - comment-cleaner
+      - draft-service
     ports:
       - "80:80"
     volumes:
@@ -160,6 +203,23 @@ services:
     networks:
       - happy_headlines_network
 
+  mysql-draft:
+    image: mysql:latest
+    container_name: mysql-draft
+    ports:
+      - "3313:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=happy123
+      - MYSQL_DATABASE=draftdatabase
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping", "-h","localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+    volumes:
+      - draftDbVolume:/var/lib/mysql
+    networks:
+      - happy_headlines_network
 
 networks:
   happy_headlines_network: {}
@@ -168,4 +228,4 @@ volumes:
   articleDbVolume: {}
   commentDbVolume: {}
   profanityDbVolume: {}
-
+  draftDbVolume: {}

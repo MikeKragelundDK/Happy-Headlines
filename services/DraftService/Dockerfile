@@ -1,0 +1,19 @@
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /workspace
+
+COPY pom.xml ./pom.xml
+COPY services/pom.xml ./services/pom.xml
+
+COPY services/DraftService/pom.xml ./services/DraftService/pom.xml
+COPY services/DraftService/src ./services/DraftService/src
+
+RUN mvn -q -B -f services/DraftService/pom.xml -DskipTests package
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY otel/opentelemetry-javaagent.jar /otel/opentelemetry-javaagent.jar
+
+COPY --from=build /workspace/services/DraftService/target/*.jar app.jar
+ENV JAVA_TOOL_OPTIONS="-javaagent:/otel/opentelemetry-javaagent.jar"
+
+ENTRYPOINT ["java","-jar","/app/app.jar"]
