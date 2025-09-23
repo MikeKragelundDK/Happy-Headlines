@@ -15,6 +15,8 @@ WORKDIR /app
 COPY otel/opentelemetry-javaagent.jar /otel/opentelemetry-javaagent.jar
 
 COPY --from=build /workspace/services/ProfanityService/target/*.jar app.jar
+COPY newrelic/newrelic.jar /usr/local/newrelic/newrelic.jar
+COPY newrelic/newrelic.yml /usr/local/newrelic/newrelic.yml
 ENV JAVA_TOOL_OPTIONS="-javaagent:/otel/opentelemetry-javaagent.jar"
 
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java","-jar","/app/app.jar" -javaagent:/usr/local/newrelic/newrelic.jar]

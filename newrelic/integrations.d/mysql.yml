@@ -1,0 +1,63 @@
+integrations:
+  - name: nri-mysql
+    env:
+      HOSTNAME: mysql-article
+      PORT: 3306
+      USERNAME: newrelic
+      PASSWORD: happy1234
+      REMOTE_MONITORING: "true"
+      EXTENDED_METRICS: "1"
+      EXTENDED_INNODB_METRICS: "1"
+    interval: 15s
+    labels:
+      instance: mysql-article
+      env: production
+      role: write-replica
+
+
+  - name: nri-mysql
+    env:
+      HOSTNAME: mysql-comment
+      PORT: 3306
+      USERNAME: newrelic
+      PASSWORD: happy1234
+      REMOTE_MONITORING: "true"
+      EXTENDED_METRICS: "1"
+      EXTENDED_INNODB_METRICS: "1"
+    interval: 15s
+    labels:
+      instance: mysql-comment
+      env: production
+      role: write-replica
+
+
+  - name: nri-mysql
+    env:
+      HOSTNAME: mysql-profanity
+      PORT: 3306
+      USERNAME: newrelic
+      PASSWORD: happy1234
+      REMOTE_MONITORING: "true"
+      EXTENDED_METRICS: "1"
+      EXTENDED_INNODB_METRICS: "1"
+    interval: 15s
+    labels:
+      instance: mysql-profanity
+      env: production
+      role: write-replica
+
+
+  - name: nri-mysql
+    env:
+      HOSTNAME: mysql-draft
+      PORT: 3306
+      USERNAME: newrelic
+      PASSWORD: happy1234
+      REMOTE_MONITORING: "true"
+      EXTENDED_METRICS: "1"
+      EXTENDED_INNODB_METRICS: "1"
+    interval: 15s
+    labels:
+      instance: mysql-draft
+      env: production
+      role: write-replica
