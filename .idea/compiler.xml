@@ -21,6 +21,15 @@
         <outputRelativeToContentRoot value="true" />
         <module name="CommentCleaner" />
       </profile>
+      <profile name="Annotation profile for PublisherService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
+        </processorPath>
+        <module name="PublisherService" />
+      </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
@@ -31,6 +40,7 @@
       <module name="Happy-Headlines" options="" />
       <module name="Happy-Headlines-ArticleService (1)" options="-parameters" />
       <module name="ProfanityService" options="-parameters" />
+      <module name="PublisherService" options="-parameters" />
       <module name="services" options="" />
     </option>
   </component>

@@ -19,6 +19,8 @@
         <module>ProfanityService</module>
         <module>CommentCleaner</module>
         <module>DraftService</module>
+        <module>PublisherService</module>
+        <module>NewsletterService</module>
         <!-- HUSK FOR HELEVEDE AT SMID FLERE SERVICES HERI -->
     </modules>
 

@@ -4,17 +4,17 @@ WORKDIR /workspace
 COPY pom.xml ./pom.xml
 COPY services/pom.xml ./services/pom.xml
 
-COPY services/ProfanityService/pom.xml ./services/ProfanityService/pom.xml
-COPY services/ProfanityService/src ./services/ProfanityService/src
+COPY services/PublisherService/pom.xml ./services/PublisherService/pom.xml
+COPY services/PublisherService/src ./services/PublisherService/src
 
-RUN mvn -q -B -f services/ProfanityService/pom.xml -DskipTests package
+RUN mvn -q -B -f services/PublisherService/pom.xml -DskipTests package
 
 FROM eclipse-temurin:21-jre
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY otel/opentelemetry-javaagent.jar /otel/opentelemetry-javaagent.jar
 
-COPY --from=build /workspace/services/ProfanityService/target/*.jar app.jar
+COPY --from=build /workspace/services/PublisherService/target/*.jar app.jar
 COPY newrelic/newrelic.jar /usr/local/newrelic/newrelic.jar
 COPY newrelic/newrelic.yml /usr/local/newrelic/newrelic.yml
 ENV JAVA_TOOL_OPTIONS="-javaagent:/otel/opentelemetry-javaagent.jar -javaagent:/usr/local/newrelic/newrelic.jar"
