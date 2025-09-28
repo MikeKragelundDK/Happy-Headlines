@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ArticleService.service.ArticleService_I;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ public class ArticleController {
 
     @PostMapping
     public ResponseEntity<Article> postArticle(@RequestBody ArticleRequest article) {
-        Article a = new Article(article.getTitle(),article.getAuthor(),article.getPublishedAt(), article.getContent());
+        Article a = new Article(article.getTitle(),article.getAuthor(), article.getContent());
         Article saved = articleService.addArticle(a);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
@@ -53,7 +55,7 @@ public class ArticleController {
         if(articleService.getArticle(id) == null) {
             throw new RuntimeException("Article not found: " + id);
         }
-        Article a = new Article(id,article.getTitle(),article.getAuthor(),article.getPublishedAt(), article.getContent());
+        Article a = new Article(id,article.getTitle(),article.getAuthor(),article.getPublishedAt().orElse(LocalDateTime.now()), article.getContent());
         Article saved = articleService.updateArticle(a);
         return  ResponseEntity.status(HttpStatus.OK).body(saved);
     }

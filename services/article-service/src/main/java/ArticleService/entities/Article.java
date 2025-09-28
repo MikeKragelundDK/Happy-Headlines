@@ -25,10 +25,10 @@ public class Article {
     @Column(name="content")
     private String content;
 
-    public Article(String title, String author, LocalDateTime published_at, String content) {
+    public Article(String title, String author, String content) {
         this.title = title;
         this.author = author;
-        this.publishedAt = published_at;
+        this.publishedAt = LocalDateTime.now();
         this.content = content;
     }
     public Article(long id,String title, String author, LocalDateTime published_at, String content) {

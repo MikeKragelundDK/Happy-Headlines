@@ -16,6 +16,10 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
       OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
       OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
+      SPRING.RABBITMQ.HOST: "rabbitmq"
+      SPRING.RABBITMQ.PORT: 5672
+      SPRING.RABBITMQ.USERNAME: "app"
+      SPRING.RABBITMQ.PASSWORD: "app"
     depends_on:
       mysql-article:
         condition: service_healthy

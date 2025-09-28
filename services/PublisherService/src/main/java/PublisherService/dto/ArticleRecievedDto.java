@@ -16,7 +16,5 @@ public class ArticleRecievedDto {
     //Basically the same object that i use for ArticleService Dto
     private String title;
     private String author;
-    @JsonDeserialize(using = DateOrDateTimeDeserializer.class)
-    private LocalDateTime publishedAt;
     private String content;
 }

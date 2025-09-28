@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 @Data
 @Getter
 @Setter
@@ -14,6 +16,6 @@ public class ArticleRequest {
     private String title;
     private String author;
     @JsonDeserialize(using = DateOrDateTimeDeserializer.class)
-    private LocalDateTime publishedAt;
+    private Optional<LocalDateTime> publishedAt;
     private String content;
 }
