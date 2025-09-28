@@ -48,4 +48,9 @@ public class ArticleServiceimpl implements ArticleService_I {
         }
         return result;
     }
+
+    @Override
+    public List<Article> findTop5ByOrderByPublishedAtDesc() {
+        return articleRepos.findTop5ByOrderByPublishedAtDesc();
+    }
 }

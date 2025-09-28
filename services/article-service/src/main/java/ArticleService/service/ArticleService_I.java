@@ -12,4 +12,5 @@ public interface ArticleService_I {
      Article updateArticle(Article article);
      void deleteArticle(long id);
      Map<Long, Boolean> existsMap(List<Long> ids);
+     List<Article> findTop5ByOrderByPublishedAtDesc();
 }

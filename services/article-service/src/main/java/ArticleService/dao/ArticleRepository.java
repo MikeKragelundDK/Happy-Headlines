@@ -21,4 +21,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query("select a.id from Article a where a.id in :ids")
     List<Long> findExistingIds(@Param("ids")Collection<Long> ids);
+
+    List<Article> findTop5ByOrderByPublishedAtDesc();
+
 }

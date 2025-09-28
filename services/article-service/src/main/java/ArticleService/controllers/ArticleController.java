@@ -32,6 +32,12 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK).body(fetched);
     }
 
+    /*
+    I need something here that can link an article to an author.
+    Right now every article gets a new authorId
+    A fix could be to add a author entity to the db, compare with that or init a new author.. idk
+    TODO
+     */
     @PostMapping
     public ResponseEntity<Article> postArticle(@RequestBody ArticleRequest article) {
         Article a = new Article(article.getTitle(),article.getAuthor(), article.getContent());
@@ -64,5 +70,11 @@ public class ArticleController {
     public ResponseEntity<Map<Long, Boolean>> exists(@RequestBody List<Long> ids) {
         Map<Long, Boolean> result = articleService.existsMap(ids);
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/top5")
+    public ResponseEntity<List<Article>> getTop5Articles(){
+        List<Article> fetched = articleService.findTop5ByOrderByPublishedAtDesc();
+        return ResponseEntity.status(HttpStatus.OK).body(fetched);
     }
 }

@@ -165,6 +165,25 @@ services:
       mode: replicated
       replicas: 1
 
+  newsletter-service:
+    build:
+      context: .
+      dockerfile: services/NewsletterService/Dockerfile
+    image: happy-headlines/newsletter-service:dev
+    environment:
+      OTEL_SERVICE_NAME: service-newsletter
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+      OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
+    depends_on:
+      article-service:
+        # Might extend this to service_healthy later on..
+        condition: service_started
+    networks:
+      - happy_headlines_network
+    expose:
+      - 8383
+
   nginxservice:
     image: nginx:alpine
     depends_on:
@@ -305,4 +324,3 @@ volumes:
   commentDbVolume: {}
   profanityDbVolume: {}
   draftDbVolume: {}
-
