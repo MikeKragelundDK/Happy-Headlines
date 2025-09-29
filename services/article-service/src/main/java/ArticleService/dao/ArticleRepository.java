@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
@@ -23,5 +22,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Long> findExistingIds(@Param("ids")Collection<Long> ids);
 
     List<Article> findTop5ByOrderByPublishedAtDesc();
+    List<Article> findAllByPublishedAtAfterOrderByPublishedAtDesc(LocalDateTime cutoff);
+
 
 }

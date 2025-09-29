@@ -20,8 +20,12 @@ services:
       SPRING.RABBITMQ.PORT: 5672
       SPRING.RABBITMQ.USERNAME: "app"
       SPRING.RABBITMQ.PASSWORD: "app"
+      SPRING.DATA.REDIS.HOST: "redis-article"
+      SPRING.DATA.REDIS.PORT: 6379
     depends_on:
       mysql-article:
+        condition: service_healthy
+      redis-article:
         condition: service_healthy
     networks:
       - happy_headlines_network
@@ -316,6 +320,22 @@ services:
       - '5673:5672'
       - "15673:15672"
 
+  redis-article:
+    image: redis:7-alpine
+    command: >
+      redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - "happy_headlines_network"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
 networks:
   happy_headlines_network: {}
 
@@ -324,3 +344,4 @@ volumes:
   commentDbVolume: {}
   profanityDbVolume: {}
   draftDbVolume: {}
+  redis-data:

@@ -13,4 +13,5 @@ public interface ArticleService_I {
      void deleteArticle(long id);
      Map<Long, Boolean> existsMap(List<Long> ids);
      List<Article> findTop5ByOrderByPublishedAtDesc();
+     List<Article> getLatestSinceDays(int days);
 }

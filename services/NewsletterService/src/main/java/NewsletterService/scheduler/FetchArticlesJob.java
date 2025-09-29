@@ -22,7 +22,7 @@ public class FetchArticlesJob {
     // for testing, ever 5 minutes.
     @Scheduled(fixedDelayString = "${comment.cleanup-interval:PT5M}")
     public void getTop5Articles(){
-        /**
+        /*
          *  Right now i just fetch top 5 articles
          *  In a later iteration we need to use these, to send out to subscribers.
          *  Implementing that part might be smarter when we know how we want subscriber service to look like

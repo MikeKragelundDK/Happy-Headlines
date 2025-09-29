@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -22,11 +23,11 @@ public class Draft {
     @Column(name="content", nullable = true)
     private String content;
     @Column(name="last_edited_at", nullable = false)
-    private LocalDateTime lastEditedAt;
+    private Date lastEditedAt;
 
     protected Draft() {}
 
-    public Draft(String title, String author, String content, LocalDateTime lastEditedAt) {
+    public Draft(String title, String author, String content, Date lastEditedAt) {
         this.title = title;
         this.author = author;
         this.content = content;

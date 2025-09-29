@@ -61,7 +61,7 @@ public class ArticleController {
         if(articleService.getArticle(id) == null) {
             throw new RuntimeException("Article not found: " + id);
         }
-        Article a = new Article(id,article.getTitle(),article.getAuthor(),article.getPublishedAt().orElse(LocalDateTime.now()), article.getContent());
+        Article a = new Article(id,article.getTitle(),article.getAuthor(),article.getPublishedAt(), article.getContent());
         Article saved = articleService.updateArticle(a);
         return  ResponseEntity.status(HttpStatus.OK).body(saved);
     }
