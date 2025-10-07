@@ -1,5 +1,6 @@
 package CommentService.controllers;
 
+import CommentService.cache.CommentCache;
 import CommentService.entities.Comment;
 import CommentService.dto.CommentRequest;
 import CommentService.service.CommentService_I;
@@ -8,14 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
     private final CommentService_I commentService;
+    private final CommentCache commentCache;
 
-    public CommentController(CommentService_I commentService) {
+    public CommentController(CommentService_I commentService, CommentCache commentCache) {
         this.commentService = commentService;
+        this.commentCache = commentCache;
     }
 
     @GetMapping("/{articleID}")
@@ -43,6 +47,13 @@ public class CommentController {
 
         commentService.deleteAllByArticleId(articleIds);
         return ResponseEntity.status(HttpStatus.OK).body(articleIds + "deleted");
+    }
+
+
+    // fake dashboard, aka i hate frontend..
+    @GetMapping("/cache/stats")
+    public ResponseEntity<Map<String, Object>> getCacheStats(){
+        return ResponseEntity.status(HttpStatus.OK).body(commentCache.stats());
     }
 
 }

@@ -1,5 +1,6 @@
 package CommentService.service;
 
+import CommentService.cache.CommentCache;
 import CommentService.clients.ProfanityClient;
 import CommentService.dao.CommentRepository;
 import CommentService.entities.Comment;
@@ -18,10 +19,12 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService_I {
     private final CommentRepository commentRepository;
     private final ProfanityClient profane;
+    private final CommentCache commentCache;
 
-    public CommentServiceImpl(CommentRepository commentRepository,  ProfanityClient profane) {
+    public CommentServiceImpl(CommentRepository commentRepository,  ProfanityClient profane, CommentCache commentCache) {
         this.commentRepository = commentRepository;
         this.profane = profane;
+        this.commentCache = commentCache;
     }
 
     @Override
@@ -43,13 +46,14 @@ public class CommentServiceImpl implements CommentService_I {
             comment.setProfanityAttempts(1);
             comment.setProfanityNextAttemptAt(Instant.now().plus(Duration.ofMinutes(10)));
         }
-
-        return commentRepository.save(comment);
+        Comment saved = commentRepository.save(comment);
+        commentCache.invalidateArticle(saved.getArticleId());
+        return saved;
     }
 
     @Override
     public List<Comment> getCommentsForArticle(long articleId) {
-        return commentRepository.findCommentsByArticleId(articleId);
+        return commentCache.getCommentsForArticle(articleId);
     }
 
     @Override
@@ -59,12 +63,15 @@ public class CommentServiceImpl implements CommentService_I {
 
     @Override
     public Comment updateCommentForArticle(Comment comment) {
-        return commentRepository.save(comment);
+        Comment updated = commentRepository.save(comment);
+        commentCache.invalidateArticle(updated.getArticleId());
+        return updated;
     }
 
     @Override
     public void deleteCommentForArticle(long articleId, long id) {
         commentRepository.delete(commentRepository.findCommentByArticleIdAndId(articleId, id));
+        commentCache.invalidateArticle(articleId);
 
     }
 
@@ -74,8 +81,14 @@ public class CommentServiceImpl implements CommentService_I {
     }
 
     @Override
+    @Transactional
     public void saveAll(List<Comment> comments) {
         commentRepository.saveAll(comments);
+        // lidt wonky bulk invalidation
+        comments.stream()
+                .map(Comment::getArticleId)
+                .distinct()
+                .forEach(commentCache::invalidateArticle);
     }
 
     @Override
@@ -86,6 +99,8 @@ public class CommentServiceImpl implements CommentService_I {
     @Override
     @Transactional
     public long deleteAllByArticleId(Collection<Long> articleId) {
-        return commentRepository.deleteByArticleIdIn(articleId);
+        long deleted = commentRepository.deleteByArticleIdIn(articleId);
+        commentCache.invalidateArticles(articleId);
+        return deleted;
     }
 }

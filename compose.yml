@@ -52,10 +52,14 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
       OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
       OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
+      SPRING.DATA.REDIS.HOST: "redis-comment"
+      SPRING.DATA.REDIS.PORT: 6379
     depends_on:
       mysql-comment:
         condition: service_healthy
       profanity-service:
+        condition: service_healthy
+      redis-comment:
         condition: service_healthy
     expose:
       - 8181
@@ -325,9 +329,25 @@ services:
     command: >
       redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
     volumes:
-      - redis-data:/data
+      - redisArticle-data:/data
     ports:
       - "6379:6379"
+    networks:
+      - "happy_headlines_network"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis-comment:
+    image: redis:7-alpine
+    command: >
+      redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redisComment-data:/data
+    ports:
+      - "6380:6379"
     networks:
       - "happy_headlines_network"
     healthcheck:
@@ -344,4 +364,5 @@ volumes:
   commentDbVolume: {}
   profanityDbVolume: {}
   draftDbVolume: {}
-  redis-data:
+  redisArticle-data:
+  redisComment-data:
