@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-# Trigger on pushes to master branc
 on:
   push:
     branches: [ master ]
@@ -8,7 +7,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    # Grant write permission to push packages (Docker images)
+    # Grant write permission to push the docker images.
     permissions:
       contents: read
       packages: write
@@ -106,6 +105,7 @@ jobs:
         if: steps.test.outcome == 'failure'
         run: |
           echo "Tests failed – reverting to last successful Docker images"
+      # Some sexy rollback code here
 
       # Mark the job as failed if the tests failed
       - name: Finish with failure
