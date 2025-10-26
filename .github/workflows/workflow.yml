@@ -90,20 +90,22 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/newsletter-service:${{ github.run_number }}
 
-      # Run the tests for CommentService
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
       - name: Run CommentService tests
-        id: test
-        working-directory: services/CommentService
-        run: |
-          ./mvnw test
-        continue-on-error: true
+        run: mvn -B -q -f services/CommentService/pom.xml test
+
 
       # Rollback step if tests failed
       - name: Rollback on test failure
         if: steps.test.outcome == 'failure'
         run: |
           echo "Tests failed – reverting to last successful Docker images"
-          # (In a real workflow, add commands to re-deploy the previous images here.)
 
       # Mark the job as failed if the tests failed
       - name: Finish with failure
