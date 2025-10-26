@@ -37,7 +37,7 @@ jobs:
       - name: Build and push article-service image
         uses: docker/build-push-action@v4
         with:
-          context: ./services/article-service
+          context: .
           file: ./services/article-service/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/article-service:${{ github.run_number }}
@@ -45,7 +45,7 @@ jobs:
       - name: Build and push comment-service image
         uses: docker/build-push-action@v4
         with:
-          context: ./services/CommentService
+          context: .
           file: ./services/CommentService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/comment-service:${{ github.run_number }}
@@ -53,7 +53,7 @@ jobs:
       - name: Build and push profanity-service image
         uses: docker/build-push-action@v4
         with:
-          context: ./services/ProfanityService
+          context: .
           file: ./services/ProfanityService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/profanity-service:${{ github.run_number }}
@@ -61,7 +61,7 @@ jobs:
       - name: Build and push comment-cleaner image
         uses: docker/build-push-action@v4
         with:
-          context: ./services/CommentCleaner
+          context: .
           file: ./services/CommentCleaner/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/comment-cleaner:${{ github.run_number }}
@@ -69,7 +69,7 @@ jobs:
       - name: Build and push draft-service image
         uses: docker/build-push-action@v4
         with:
-          context: ./services/DraftService
+          context: .
           file: ./services/DraftService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/draft-service:${{ github.run_number }}
@@ -77,7 +77,7 @@ jobs:
       - name: Build and push publisher-service image
         uses: docker/build-push-action@v4
         with:
-          context: ./services/PublisherService
+          context: .
           file: ./services/PublisherService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/publisher-service:${{ github.run_number }}
@@ -85,7 +85,7 @@ jobs:
       - name: Build and push newsletter-service image
         uses: docker/build-push-action@v4
         with:
-          context: ./services/NewsletterService
+          context: .
           file: ./services/NewsletterService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/newsletter-service:${{ github.run_number }}
