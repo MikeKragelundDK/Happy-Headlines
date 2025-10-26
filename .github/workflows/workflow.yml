@@ -38,7 +38,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./services/article-service
-          file: Dockerfile
+          file: ./services/article-service/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/article-service:${{ github.run_number }}
 
@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./services/CommentService
-          file: Dockerfile
+          file: ./services/CommentService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/comment-service:${{ github.run_number }}
 
@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./services/ProfanityService
-          file: Dockerfile
+          file: ./services/ProfanityService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/profanity-service:${{ github.run_number }}
 
@@ -62,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./services/CommentCleaner
-          file: Dockerfile
+          file: ./services/CommentCleaner/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/comment-cleaner:${{ github.run_number }}
 
@@ -70,7 +70,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./services/DraftService
-          file: Dockerfile
+          file: ./services/DraftService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/draft-service:${{ github.run_number }}
 
@@ -78,7 +78,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./services/PublisherService
-          file: Dockerfile
+          file: ./services/PublisherService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/publisher-service:${{ github.run_number }}
 
@@ -86,7 +86,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./services/NewsletterService
-          file: Dockerfile
+          file: ./services/NewsletterService/Dockerfile
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/newsletter-service:${{ github.run_number }}
 
