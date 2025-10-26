@@ -1,9 +1,9 @@
 name: CI/CD Pipeline
 
-# Trigger on pushes to master branc
+# Trigger on pushes to main branc
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build-and-test:
