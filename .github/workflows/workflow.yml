@@ -15,7 +15,6 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      OWNER_LC: ${{ toLower(github.repository_owner) }}
 
     steps:
       - name: Checkout repository
@@ -31,6 +30,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: set lower case owner name
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: '${{ github.repository_owner }}'
+
       # Build and push each service image
       - name: Build and push article-service image
         uses: docker/build-push-action@v4
@@ -38,7 +43,7 @@ jobs:
           context: ./services/article-service
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/article-service:${{ github.run_number }}
+          tags: ghcr.io/${{ github.repository_owner }}/article-service:${{ github.run_number }}
 
       - name: Build and push comment-service image
         uses: docker/build-push-action@v4
@@ -46,7 +51,7 @@ jobs:
           context: ./services/CommentService
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/comment-service:${{ github.run_number }}
+          tags: ghcr.io/${{ github.repository_owner }}/comment-service:${{ github.run_number }}
 
       - name: Build and push profanity-service image
         uses: docker/build-push-action@v4
@@ -54,7 +59,7 @@ jobs:
           context: ./services/ProfanityService
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/profanity-service:${{ github.run_number }}
+          tags: ghcr.io/${{ github.repository_owner }}/profanity-service:${{ github.run_number }}
 
       - name: Build and push comment-cleaner image
         uses: docker/build-push-action@v4
@@ -62,7 +67,7 @@ jobs:
           context: ./services/CommentCleaner
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/comment-cleaner:${{ github.run_number }}
+          tags: ghcr.io/${{ github.repository_owner }}/comment-cleaner:${{ github.run_number }}
 
       - name: Build and push draft-service image
         uses: docker/build-push-action@v4
@@ -70,7 +75,7 @@ jobs:
           context: ./services/DraftService
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/draft-service:${{ github.run_number }}
+          tags: ghcr.io/${{ github.repository_owner }}/draft-service:${{ github.run_number }}
 
       - name: Build and push publisher-service image
         uses: docker/build-push-action@v4
@@ -78,7 +83,7 @@ jobs:
           context: ./services/PublisherService
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/publisher-service:${{ github.run_number }}
+          tags: ghcr.io/${{ github.repository_owner }}/publisher-service:${{ github.run_number }}
 
       - name: Build and push newsletter-service image
         uses: docker/build-push-action@v4
@@ -86,7 +91,7 @@ jobs:
           context: ./services/NewsletterService
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/newsletter-service:${{ github.run_number }}
+          tags: ghcr.io/${{ github.repository_owner }}/newsletter-service:${{ github.run_number }}
 
       # Run the tests for CommentService
       - name: Run CommentService tests
