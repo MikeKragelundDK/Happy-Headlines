@@ -15,11 +15,11 @@ import org.springframework.web.client.RestClient;
 public class ProfanityClient {
     private final RestClient http;
 
-
     public ProfanityClient(RestClient.Builder builder) {
         this.http = builder.baseUrl("http://profanity-service:8282")
                 .build();
     }
+
     @CircuitBreaker(name ="profanityService", fallbackMethod = "profanityUnavailable")
     @Retry(name="profanityService")
     public Boolean filter(String content){

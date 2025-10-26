@@ -7,6 +7,7 @@ import CommentService.entities.Comment;
 import CommentService.entities.Profanity;
 import CommentService.exceptions.ProfanityServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @Service
 @Slf4j
 public class CommentServiceImpl implements CommentService_I {
@@ -98,9 +101,10 @@ public class CommentServiceImpl implements CommentService_I {
 
     @Override
     @Transactional
-    public long deleteAllByArticleId(Collection<Long> articleId) {
+    @Async
+    public CompletableFuture<Long> deleteAllByArticleIdAsync(Collection<Long> articleId) {
         long deleted = commentRepository.deleteByArticleIdIn(articleId);
         commentCache.invalidateArticles(articleId);
-        return deleted;
+        return CompletableFuture.completedFuture(deleted);
     }
 }

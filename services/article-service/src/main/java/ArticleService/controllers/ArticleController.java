@@ -10,6 +10,7 @@ import ArticleService.service.ArticleService_I;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 @RestController
 @RequestMapping("/api/articles")
@@ -73,8 +74,8 @@ public class ArticleController {
     }
 
     @GetMapping("/top5")
-    public ResponseEntity<List<Article>> getTop5Articles(){
+    public Callable<ResponseEntity<List<Article>>> getTop5Articles(){
         List<Article> fetched = articleService.findTop5ByOrderByPublishedAtDesc();
-        return ResponseEntity.status(HttpStatus.OK).body(fetched);
+        return () -> ResponseEntity.status(HttpStatus.OK).body(fetched);
     }
 }
