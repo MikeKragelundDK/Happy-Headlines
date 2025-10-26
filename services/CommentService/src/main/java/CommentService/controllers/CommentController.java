@@ -44,11 +44,9 @@ public class CommentController {
     // I wanna do deletemapping (delete request) - however spring doesn't support that.. So we do post.
     @PostMapping("/bulk-delete")
     public ResponseEntity<String> deleteCommentsById(@RequestBody List<Long> articleIds){
-        commentService.deleteAllByArticleIdAsync(articleIds);
-        return ResponseEntity.accepted().build();
-        // I might wanna create a jobId and expose something like /api/comments/jobs/{jobId}
-        // idk?
-        // TODO
+
+        commentService.deleteAllByArticleId(articleIds);
+        return ResponseEntity.status(HttpStatus.OK).body(articleIds + "deleted");
     }
 
 
@@ -57,4 +55,5 @@ public class CommentController {
     public ResponseEntity<Map<String, Object>> getCacheStats(){
         return ResponseEntity.status(HttpStatus.OK).body(commentCache.stats());
     }
+
 }

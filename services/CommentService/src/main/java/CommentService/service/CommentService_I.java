@@ -6,7 +6,6 @@ import CommentService.entities.Profanity;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public interface CommentService_I {
     // web post comment + request comment
@@ -24,5 +23,5 @@ public interface CommentService_I {
 
     List<Long> findCommentIds();
 
-    CompletableFuture<Long> deleteAllByArticleIdAsync(Collection<Long> articleId);
+    long deleteAllByArticleId(Collection<Long> articleId);
 }
