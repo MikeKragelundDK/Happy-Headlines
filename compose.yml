@@ -34,6 +34,11 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 512M
+
 
   comment-service:
     build:
@@ -68,6 +73,10 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 512M
 
   profanity-service:
     build:
@@ -103,6 +112,10 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 512M
 
 
   comment-cleaner:
@@ -145,6 +158,10 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 512M
 
   publisher-service:
     build:
@@ -172,6 +189,10 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 512M
 
   newsletter-service:
     build:
@@ -190,7 +211,48 @@ services:
     networks:
       - happy_headlines_network
     expose:
-      - 8383
+      - 8686
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 512M
+
+# I should implement a MQ here, but im kinda out of time.
+  subscriber-service:
+    build:
+      context: .
+      dockerfile: services/SubscriberService/Dockerfile
+    image: happy-headlines/subscriber-service:dev
+    environment:
+      SPRING_SESSION_STORE_TYPE: jdbc
+      SPRING_SESSION_JDBC_INITIALIZE_SCHEMA: always
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8787
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-subscribe:3306/subscriberdatabase
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: happy123
+      OTEL_SERVICE_NAME: service-subscriber
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp.eu01.nr-data.net:4318"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+      OTEL_EXPORTER_OTLP_HEADERS: "api-key=eu01xxc5b342da0014f4272b0e948899FFFFNRAL"
+    depends_on:
+      mysql-subscribe:
+        condition: service_healthy
+        # i need to add the rabbitmq here!! TODO
+    networks:
+      - happy_headlines_network
+    expose:
+      - 8787
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.70"
+          memory: 512M
 
   nginxservice:
     image: nginx:alpine
@@ -201,6 +263,8 @@ services:
       - comment-cleaner
       - draft-service
       - publisher-service
+      - newsletter-service
+      - subscriber-service
     ports:
       - "80:80"
     volumes:
@@ -281,6 +345,25 @@ services:
       - happy_headlines_network
 
 
+  mysql-subscribe:
+    image: mysql:latest
+    container_name: mysql-subscribe
+    ports:
+      - "3314:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=happy123
+      - MYSQL_DATABASE=subscriberdatabase
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping", "-h","localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+    volumes:
+      - subscribeDbVolume:/var/lib/mysql
+    networks:
+      - happy_headlines_network
+
+
   newrelic-infra:
     image: newrelic/infrastructure-bundle:latest
     container_name: newrelic-infra
@@ -313,11 +396,14 @@ services:
     environment:
       RABBITMQ_DEFAULT_PASS: app
       RABBITMQ_DEFAULT_USER: app
+      RABBITMQ_ERLANG_COOKIE: thisshitbetterfuckingwork1234567890
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
     networks:
       - "happy_headlines_network"
     ports:
@@ -364,5 +450,9 @@ volumes:
   commentDbVolume: {}
   profanityDbVolume: {}
   draftDbVolume: {}
+  subscribeDbVolume: {}
   redisArticle-data:
   redisComment-data:
+  rabbitmq-data:
+
+
