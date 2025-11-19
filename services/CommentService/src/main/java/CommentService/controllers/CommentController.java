@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -43,12 +45,11 @@ public class CommentController {
 
     // I wanna do deletemapping (delete request) - however spring doesn't support that.. So we do post.
     @PostMapping("/bulk-delete")
-    public ResponseEntity<String> deleteCommentsById(@RequestBody List<Long> articleIds){
-        commentService.deleteAllByArticleIdAsync(articleIds);
-        return ResponseEntity.accepted().build();
-        // I might wanna create a jobId and expose something like /api/comments/jobs/{jobId}
-        // idk?
-        // TODO
+    public CompletableFuture<ResponseEntity<String>> deleteCommentsById(@RequestBody List<Long> articleIds){
+        return  commentService.deleteAllByArticleIdAsync(articleIds)
+                .orTimeout(30, TimeUnit.SECONDS)
+                .thenApply(deleted -> ResponseEntity.status(HttpStatus.OK).body("Deleted " + deleted + " comments"))
+                .exceptionally(e -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete comments"));
     }
 
 

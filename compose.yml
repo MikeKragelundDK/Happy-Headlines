@@ -33,7 +33,7 @@ services:
       - 8080
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 3
       resources:
         limits:
           cpus: "0.70"
@@ -381,7 +381,6 @@ services:
       - "./newrelic/integrations.d:/etc/newrelic-infra/integrations.d:ro"
     networks:
       - happy_headlines_network
-    # jeg bør lave noget lækkert her med, at det er den sidste ting der spinnes op..
     depends_on:
       - mysql-article
       - mysql-comment

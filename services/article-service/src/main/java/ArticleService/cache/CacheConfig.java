@@ -21,7 +21,6 @@ import java.util.Map;
 @EnableCaching
 @EnableScheduling
 public class CacheConfig {
-
    private RedisCacheConfiguration baseConfig(Duration ttl){
        return RedisCacheConfiguration.defaultCacheConfig()
                .entryTtl(ttl)
@@ -33,7 +32,6 @@ public class CacheConfig {
                )
                .computePrefixWith(cacheName -> "article-service:".concat(cacheName).concat(":"));
    }
-
 
    @Bean
    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory){
